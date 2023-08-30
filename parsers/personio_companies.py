@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import xmltodict
 
 ENDPOINT = "https://{company}.jobs.personio.de/xml?language=en"
-COMPANIES = ["ostrom", "gridx"]
+COMPANIES = ["recup","ostrom", "gridx"]
 
 def get_jobs(company):
     company_endpoint = ENDPOINT.format(company=company)
