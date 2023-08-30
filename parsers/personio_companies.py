@@ -5,7 +5,7 @@ from models import jobs
 
 ENDPOINT = "https://{company}.jobs.personio.de/xml?language=en"
 JOBENDPOINT = "https://{company}.jobs.personio.de/job/{id}?display=en"
-COMPANIES = ["recup","ostrom", "gridx"]
+COMPANIES = ["recup", "ostrom", "gridx"]
 
 '''
 Map strings to enums
