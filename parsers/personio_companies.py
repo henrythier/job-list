@@ -59,7 +59,7 @@ def map_experience(experience: str) -> jobs.Experience:
 '''
 Parse XML to Job Objects
 '''
-def get_jobs(company):
+def get_jobs(company: str):
     company_endpoint = ENDPOINT.format(company=company)
     # Sending the GET request
     response = requests.get(company_endpoint)
@@ -74,8 +74,10 @@ def get_jobs(company):
         # Abort if no positions found
         if len(positions) == 0:
             print("Request for {company} returned no positions")
+            return None
 
         # Unpack position information and drop job description
+        job_list = []
         for p in positions:
             position_string = ET.tostring(p, encoding="utf-8").decode("utf-8")
             position_dict = xmltodict.parse(position_string)['position']
@@ -95,12 +97,19 @@ def get_jobs(company):
                 experience=job_experience,
                 link=JOBENDPOINT.format(company=company, id=position_dict['id'])
             )
+            job_list.append(job)
+            print("")
             print(job)
 
+        return jobs
+    
     else:
         print("Request for {company} failed with status code: {response.status_code}")
+        return None
 
 if __name__ == "__main__":
     for company in COMPANIES:
+        print("----------------------")
         print(f"Fetching jobs for {company}")
         get_jobs(company)
+        print("----------------------")
