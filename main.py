@@ -4,16 +4,19 @@ from parsers import personio_companies
 
 # get all companies
 session = client.start_session()
-companies = client.get_all_companies(session)
+company_list = client.get_all_companies(session)
 
 # scrape all companies
-for c in companies:
-    job_list = personio_companies.get_jobs(c.name)
+for company in company_list:
+    job_list = personio_companies.get_jobs(company)
     for job in job_list:
         job_instance = models.Job(title=job.title, category=job.category, seniority=job.seniority, experience=job.experience,
-                                  schedule=job.schedule, link=job.link, company=c)
-        client.add_or_update_job(job_instance, session)
-        print(f"added: {job.title} at {c.name}")
+                                  schedule=job.schedule, link=job.link, company=company)
+        try:
+            client.add_or_update_job(job_instance, session)
+        except Exception as e:
+            print(e)
+            print(f"could not handle: {job_instance.title}")
 
 client.end_session(session)
         

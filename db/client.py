@@ -4,11 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from db.models import Job, Company
 
 # Replace these values with your PostgreSQL database information
-DATABASE_URL = "DB URL"
+DATABASE_URL = "DBURL"
 
 # start session
 def start_session():
-    engine = create_engine(DATABASE_URL, echo=True)
+    engine = create_engine(DATABASE_URL)
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
@@ -25,7 +25,6 @@ def add_or_update_job(job_instance, session):
 
     # update
     if existing_job:
-        print("________job already exists________")
         existing_job.title = job_instance.title
         existing_job.category = job_instance.category
         existing_job.seniority = job_instance.seniority

@@ -1,7 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 import xmltodict
-from models import jobs
+from db import models
 
 ENDPOINT = "https://{company}.jobs.personio.de/xml?language=en"
 JOBENDPOINT = "https://{company}.jobs.personio.de/job/{id}?display=en"
@@ -9,57 +9,57 @@ JOBENDPOINT = "https://{company}.jobs.personio.de/job/{id}?display=en"
 '''
 Map strings to enums
 '''
-def map_category(category: str) -> jobs.Category:
+def map_category(category: str) -> models.JobCategory:
     if (category == "marketing_and_product"):
-        return jobs.Category.MARKETING
+        return models.JobCategory.MARKETING
     elif (category == "it_software"):
-        return jobs.Category.ENGINEERING
+        return models.JobCategory.ENGINEERING
     elif (category == "sales_and_business_development"):
-        return jobs.Category.SALES
+        return models.JobCategory.SALES
     elif (category == "administrative_and_clerical"):
-        return jobs.Category.ADMIN
+        return models.JobCategory.ADMIN
     elif (category == "production_and_operations"):
-        return jobs.Category.MANUFACTURING
+        return models.JobCategory.MANUFACTURING
     elif (category == "other"):
-        return jobs.Category.OTHER
+        return models.JobCategory.OTHER 
     else:
-        return jobs.Category.UNKNOWN
+        return models.JobCategory.UNKNOWN
 
-def map_seniority(seniority: str) -> jobs.Senority:
+def map_seniority(seniority: str) -> models.JobSeniority:
     if (seniority == "student"):
-        return jobs.Senority.STUDENT
+        return models.JobSeniority.STUDENT
     elif (seniority == "entry-level"):
-        return jobs.Senority.ENTRYLEVEL
+        return models.JobSeniority.ENTRYLEVEL
     elif (seniority == "experienced"):
-        return jobs.Senority.EXPERIENCED
+        return models.JobSeniority.EXPERIENCED
     else:
-        return jobs.Senority.UNKNOWN
+        return models.JobSeniority.UNKNOWN
     
-def map_schedule(schedule: str) -> jobs.Schedule:
+def map_schedule(schedule: str) -> models.JobSchedule:
     if (schedule == "part-time"):
-        return jobs.Schedule.PARTTIME
+        return models.JobSchedule.PARTTIME
     elif (schedule == "full-time"):
-        return jobs.Schedule.FULLTIME
+        return models.JobSchedule.FULLTIME
     else:
-        return jobs.Schedule.UNKNOWN
+        return models.JobSchedule.UNKNOWN
     
-def map_experience(experience: str) -> jobs.Experience:
+def map_experience(experience: str) -> models.JobExperience:
     if (experience == "lt-1"):
-        return jobs.Experience.ENTRY
+        return models.JobExperience.ENTRY
     elif (experience == "1-2"):
-        return jobs.Experience.JUNIOR
+        return models.JobExperience.JUNIOR
     elif (experience == "2-5"):
-        return jobs.Experience.MID
+        return models.JobExperience.MID
     elif (experience == "5-7"):
-        return jobs.Experience.SENIOR
+        return models.JobExperience.SENIOR
     else:
-        return jobs.Experience.UNKNOWN
+        return models.JobExperience.UNKNOWN
 
 '''
 Parse XML to Job Objects
 '''
-def get_jobs(company: str):
-    company_endpoint = ENDPOINT.format(company=company)
+def get_jobs(company: models.Company):
+    company_endpoint = ENDPOINT.format(company=company.name)
     # Sending the GET request
     response = requests.get(company_endpoint)
 
@@ -72,7 +72,7 @@ def get_jobs(company: str):
 
         # Abort if no positions found
         if len(positions) == 0:
-            print("Request for {company} returned no positions")
+            print("Request for {company.name} returned no positions")
             return None
 
         # Unpack position information and drop job description
@@ -87,18 +87,18 @@ def get_jobs(company: str):
             job_schedule = map_schedule(position_dict['schedule'])
             job_experience = map_experience(position_dict['yearsOfExperience'])
 
-            job = jobs.Job(
-                id=position_dict['id'],
+            job = models.Job(
                 title=position_dict['name'],
                 category=job_category,
                 seniority=job_seniority,
                 schedule=job_schedule,
                 experience=job_experience,
-                link=JOBENDPOINT.format(company=company, id=position_dict['id'])
+                link=JOBENDPOINT.format(company=company.name, id=position_dict['id']),
+                company=company
             )
             job_list.append(job)
         return job_list
     
     else:
-        print("Request for {company} failed with status code: {response.status_code}")
+        print("Request for {company.name} failed with status code: {response.status_code}")
         return None
