@@ -3,9 +3,8 @@ from enum import Enum
 class JobTool(Enum):
     PERSONIO = "Personio"
 
-class Job:
-    def __init__(self, id, name, url, jobtool):
-        self.id = str(id)
+class Company:
+    def __init__(self, name, url, jobtool):
         self.name = str(name)
         self.url = str(url)
         self.jobtool = JobTool(jobtool)

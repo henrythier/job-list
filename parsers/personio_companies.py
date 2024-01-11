@@ -5,7 +5,6 @@ from models import jobs
 
 ENDPOINT = "https://{company}.jobs.personio.de/xml?language=en"
 JOBENDPOINT = "https://{company}.jobs.personio.de/job/{id}?display=en"
-COMPANIES = ["recup", "ostrom", "gridx"]
 
 '''
 Map strings to enums
@@ -98,18 +97,8 @@ def get_jobs(company: str):
                 link=JOBENDPOINT.format(company=company, id=position_dict['id'])
             )
             job_list.append(job)
-            print("")
-            print(job)
-
-        return jobs
+        return job_list
     
     else:
         print("Request for {company} failed with status code: {response.status_code}")
         return None
-
-if __name__ == "__main__":
-    for company in COMPANIES:
-        print("----------------------")
-        print(f"Fetching jobs for {company}")
-        get_jobs(company)
-        print("----------------------")
