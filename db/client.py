@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from db.models import Job, Company
 
 # Replace these values with your PostgreSQL database information
-DATABASE_URL = "DBURL"
+DATABASE_URL = "URL"
 
 # start session
 def start_session():
@@ -42,9 +42,15 @@ def add_or_update_job(job_instance, session):
 COMPANIES
 '''
 # function to add companies
-def add_company(company_instance, session):
+def add_company(link, name, jobtool):
+    session = start_session()
+    company_instance = Company(link, name, jobtool)
     session.add(company_instance)
     session.commit()
+    end_session(session)
+    print(f"Added {name} to the database")
 
 def get_all_companies(session):
     return session.query(Company).all()
+
+#add_company("https://recup.de/", "ReCup", "PERSONIO")

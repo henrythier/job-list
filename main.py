@@ -8,6 +8,7 @@ company_list = client.get_all_companies(session)
 
 # scrape all companies
 for company in company_list:
+    print(f"adding jobs from {company.name}")
     job_list = personio_companies.get_jobs(company)
     for job in job_list:
         job_instance = models.Job(title=job.title, category=job.category, seniority=job.seniority, experience=job.experience,
@@ -17,6 +18,7 @@ for company in company_list:
         except Exception as e:
             print(e)
             print(f"could not handle: {job_instance.title}")
+    print(f"added jobs from {company.name}")
 
 client.end_session(session)
         

@@ -59,7 +59,7 @@ def map_experience(experience: str) -> models.JobExperience:
 Parse XML to Job Objects
 '''
 def get_jobs(company: models.Company):
-    company_endpoint = ENDPOINT.format(company=company.name)
+    company_endpoint = ENDPOINT.format(company=company.name.lower())
     # Sending the GET request
     response = requests.get(company_endpoint)
 
@@ -93,7 +93,7 @@ def get_jobs(company: models.Company):
                 seniority=job_seniority,
                 schedule=job_schedule,
                 experience=job_experience,
-                link=JOBENDPOINT.format(company=company.name, id=position_dict['id']),
+                link=JOBENDPOINT.format(company=company.name.lower(), id=position_dict['id']),
                 company=company
             )
             job_list.append(job)

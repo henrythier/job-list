@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from enum import Enum
 
 # Database credentials
-DATABASE_URL = "DBURL"
+DATABASE_URL = "URL"
 
 # Create an SQLAlchemy engine
 engine = create_engine(DATABASE_URL, echo=True)
