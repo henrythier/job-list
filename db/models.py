@@ -2,9 +2,12 @@ from sqlalchemy import create_engine, Column, String, DateTime, Boolean, Foreign
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from enum import Enum
+from dotenv import load_dotenv
+import os
 
 # Database credentials
-DATABASE_URL = "URL"
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Create an SQLAlchemy engine
 engine = create_engine(DATABASE_URL, echo=True)

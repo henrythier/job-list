@@ -2,9 +2,12 @@ import psycopg2
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from db.models import Job, Company
+from dotenv import load_dotenv
+import os
 
-# Replace these values with your PostgreSQL database information
-DATABASE_URL = "URL"
+# Load database credentials
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # start session
 def start_session():
