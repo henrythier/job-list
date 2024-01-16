@@ -6,10 +6,15 @@ from parsers import personio
 session = client.start_session()
 company_list = client.get_all_companies(session)
 
+# get job_list based on companys jobtool
+def get_job_list(company: models.Company):
+    if company.jobtool == models.JobTool.PERSONIO:
+        return personio.get_jobs(company)
+
 # scrape all companies
 for company in company_list:
     print(f"adding jobs from {company.name}")
-    job_list = personio.get_jobs(company)
+    job_list = get_job_list(company)
     for job in job_list:
         job_instance = models.Job(title=job.title, category=job.category, seniority=job.seniority, experience=job.experience,
                                   schedule=job.schedule, link=job.link, company=company)
