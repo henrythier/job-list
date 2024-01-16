@@ -18,13 +18,19 @@ Base = declarative_base()
 '''
 COMPANY
 '''
+class JobTool(Enum):
+    ASHBYHQ = "Ashbyhq"
+    GREENHOUSE = "Greenhouse"
+    PERSONIO = "Personio"
+    WORKABLE = "Workable"
+
 # Company class
 class Company(Base):
     __tablename__ = 'companies'
 
     link = Column(String, primary_key=True)
     name = Column(String, nullable=False)
-    jobtool = Column(String, nullable=False)
+    jobtool = Column(SQLAlchemyEnum(JobTool), nullable=False)
 
     # Relationship with Job class
     jobs = relationship('Job', back_populates='company')
@@ -32,8 +38,7 @@ class Company(Base):
     def __init__(self, link, name, jobtool):
         self.link = str(link)
         self.name = str(name)
-        self.jobtool = str(jobtool)
-
+        self.jobtool = JobTool(jobtool)
 
 '''
 JOB
@@ -92,4 +97,5 @@ class Job(Base):
         self.company = company
 
 # Create the table in the database
-Base.metadata.create_all(engine)
+if __name__ == "__main__":
+    Base.metadata.create_all(engine)
